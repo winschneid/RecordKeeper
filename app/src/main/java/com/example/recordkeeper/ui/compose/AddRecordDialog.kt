@@ -41,6 +41,7 @@ import com.example.recordkeeper.data.entity.LiveRecord
 import com.example.recordkeeper.data.entity.MovieRecord
 import com.example.recordkeeper.data.entity.RamenRecord
 import com.example.recordkeeper.ui.theme.RecordKeeperTheme
+import com.example.recordkeeper.util.DateUtils
 import com.example.recordkeeper.viewmodel.RecordViewModel
 
 @Composable
@@ -135,7 +136,7 @@ fun AddLiveRecordForm(
     var title by remember { mutableStateOf("") }
     var artist by remember { mutableStateOf("") }
     var venue by remember { mutableStateOf("") }
-    var date by remember { mutableStateOf("") }
+    var date by remember { mutableStateOf(DateUtils.formatDate(DateUtils.getCurrentDate())) }
     var rating by remember { mutableIntStateOf(5) }
     var memo by remember { mutableStateOf("") }
     
@@ -167,11 +168,10 @@ fun AddLiveRecordForm(
         
         Spacer(modifier = Modifier.height(8.dp))
         
-        OutlinedTextField(
+        DatePickerField(
             value = date,
             onValueChange = { date = it },
-            label = { Text("日付 (YYYY-MM-DD)") },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            label = "日付",
             modifier = Modifier.fillMaxWidth()
         )
         
@@ -251,7 +251,7 @@ fun AddMovieRecordForm(
     var title by remember { mutableStateOf("") }
     var director by remember { mutableStateOf("") }
     var theater by remember { mutableStateOf("") }
-    var date by remember { mutableStateOf("") }
+    var date by remember { mutableStateOf(DateUtils.formatDate(DateUtils.getCurrentDate())) }
     var rating by remember { mutableIntStateOf(5) }
     var memo by remember { mutableStateOf("") }
     
@@ -283,11 +283,10 @@ fun AddMovieRecordForm(
         
         Spacer(modifier = Modifier.height(8.dp))
         
-        OutlinedTextField(
+        DatePickerField(
             value = date,
             onValueChange = { date = it },
-            label = { Text("日付 (YYYY-MM-DD)") },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            label = "日付",
             modifier = Modifier.fillMaxWidth()
         )
         
@@ -367,7 +366,7 @@ fun AddRamenRecordForm(
     var shopName by remember { mutableStateOf("") }
     var menuName by remember { mutableStateOf("") }
     var location by remember { mutableStateOf("") }
-    var date by remember { mutableStateOf("") }
+    var date by remember { mutableStateOf(DateUtils.formatDate(DateUtils.getCurrentDate())) }
     var rating by remember { mutableIntStateOf(5) }
     var memo by remember { mutableStateOf("") }
     
@@ -399,11 +398,10 @@ fun AddRamenRecordForm(
         
         Spacer(modifier = Modifier.height(8.dp))
         
-        OutlinedTextField(
+        DatePickerField(
             value = date,
             onValueChange = { date = it },
-            label = { Text("日付 (YYYY-MM-DD)") },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            label = "日付",
             modifier = Modifier.fillMaxWidth()
         )
         
@@ -504,7 +502,7 @@ private fun AddLiveRecordFormPreviewContent() {
     var title by remember { mutableStateOf("") }
     var artist by remember { mutableStateOf("") }
     var venue by remember { mutableStateOf("") }
-    var date by remember { mutableStateOf("") }
+    var date by remember { mutableStateOf(DateUtils.formatDate(DateUtils.getCurrentDate())) }
     var rating by remember { mutableIntStateOf(5) }
     var memo by remember { mutableStateOf("") }
     
@@ -536,11 +534,10 @@ private fun AddLiveRecordFormPreviewContent() {
         
         Spacer(modifier = Modifier.height(8.dp))
         
-        OutlinedTextField(
+        DatePickerField(
             value = date,
             onValueChange = { date = it },
-            label = { Text("日付 (YYYY-MM-DD)") },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            label = "日付",
             modifier = Modifier.fillMaxWidth()
         )
         
