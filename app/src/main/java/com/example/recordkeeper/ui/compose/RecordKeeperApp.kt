@@ -22,7 +22,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import com.example.recordkeeper.R
+import com.example.recordkeeper.ui.theme.RecordKeeperTheme
 import com.example.recordkeeper.viewmodel.RecordViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -88,5 +90,64 @@ fun RecordKeeperApp(viewModel: RecordViewModel) {
             selectedTab = selectedTab,
             onDismiss = { showAddDialog = false }
         )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun RecordKeeperAppPreview() {
+    RecordKeeperTheme {
+        // Preview用のダミーViewModel
+        // 実際のプレビューではViewModelなしで表示
+        RecordKeeperAppPreviewContent()
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun RecordKeeperAppPreviewContent() {
+    val tabs = listOf("ライブ", "映画", "ラーメン")
+    var selectedTab by remember { mutableStateOf(0) }
+    
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = {
+                    Text(text = "記録キーパー")
+                }
+            )
+        },
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = { }
+            ) {
+                Icon(Icons.Default.Add, contentDescription = "記録を追加")
+            }
+        }
+    ) { innerPadding ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+        ) {
+            TabRow(
+                selectedTabIndex = selectedTab
+            ) {
+                tabs.forEachIndexed { index, title ->
+                    Tab(
+                        selected = selectedTab == index,
+                        onClick = { selectedTab = index },
+                        text = { Text(title) }
+                    )
+                }
+            }
+            
+            Box(modifier = Modifier.fillMaxSize()) {
+                Text(
+                    text = "${tabs[selectedTab]}の記録一覧",
+                    modifier = Modifier.padding(16.dp)
+                )
+            }
+        }
     }
 }

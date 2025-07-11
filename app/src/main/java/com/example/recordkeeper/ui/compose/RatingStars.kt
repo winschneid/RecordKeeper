@@ -10,7 +10,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.recordkeeper.ui.theme.RecordKeeperTheme
 
 @Composable
 fun RatingStars(
@@ -26,6 +28,30 @@ fun RatingStars(
                 tint = if (index < rating) starColor else MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.size(16.dp)
             )
+        }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun RatingStarsPreview() {
+    RecordKeeperTheme {
+        Row {
+            RatingStars(rating = 5)
+        }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun RatingStarsVariousPreview() {
+    RecordKeeperTheme {
+        androidx.compose.foundation.layout.Column {
+            RatingStars(rating = 1)
+            RatingStars(rating = 2)
+            RatingStars(rating = 3)
+            RatingStars(rating = 4)
+            RatingStars(rating = 5)
         }
     }
 }

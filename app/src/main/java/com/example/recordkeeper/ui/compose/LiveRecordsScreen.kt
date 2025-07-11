@@ -23,8 +23,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.recordkeeper.data.entity.LiveRecord
+import com.example.recordkeeper.ui.theme.RecordKeeperTheme
 import com.example.recordkeeper.viewmodel.RecordViewModel
 
 @Composable
@@ -124,3 +126,87 @@ fun LiveRecordCard(
         }
     }
 }
+
+@Preview(showBackground = true)
+@Composable
+private fun LiveRecordCardPreview() {
+    RecordKeeperTheme {
+        LiveRecordCard(
+            record = LiveRecord(
+                id = 1,
+                title = "BABYMETAL WORLD TOUR 2024",
+                artist = "BABYMETAL",
+                venue = "東京ドーム",
+                date = "2024-12-25",
+                rating = 5,
+                memo = "最高のライブでした！"
+            ),
+            onDelete = {}
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun LiveRecordsScreenEmptyPreview() {
+    RecordKeeperTheme {
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = "まだライブの記録がありません",
+                style = MaterialTheme.typography.bodyLarge,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun LiveRecordsScreenWithDataPreview() {
+    RecordKeeperTheme {
+        LazyColumn(
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            items(sampleLiveRecords) { record ->
+                LiveRecordCard(
+                    record = record,
+                    onDelete = {}
+                )
+            }
+        }
+    }
+}
+
+private val sampleLiveRecords = listOf(
+    LiveRecord(
+        id = 1,
+        title = "BABYMETAL WORLD TOUR 2024",
+        artist = "BABYMETAL",
+        venue = "東京ドーム",
+        date = "2024-12-25",
+        rating = 5,
+        memo = "最高のライブでした！"
+    ),
+    LiveRecord(
+        id = 2,
+        title = "あいみょん全国ツアー",
+        artist = "あいみょん",
+        venue = "さいたまスーパーアリーナ",
+        date = "2024-11-15",
+        rating = 4,
+        memo = "感動しました"
+    ),
+    LiveRecord(
+        id = 3,
+        title = "米津玄師 KICK BACK",
+        artist = "米津玄師",
+        venue = "横浜アリーナ",
+        date = "2024-10-20",
+        rating = 5,
+        memo = ""
+    )
+)

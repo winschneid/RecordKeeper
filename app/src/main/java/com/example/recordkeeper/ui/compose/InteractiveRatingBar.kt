@@ -9,9 +9,15 @@ import androidx.compose.material.icons.outlined.Star
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.recordkeeper.ui.theme.RecordKeeperTheme
 
 @Composable
 fun InteractiveRatingBar(
@@ -30,6 +36,26 @@ fun InteractiveRatingBar(
                 modifier = Modifier
                     .size(32.dp)
                     .clickable { onRatingChanged(index + 1) }
+            )
+        }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun InteractiveRatingBarPreview() {
+    RecordKeeperTheme {
+        var rating by remember { mutableIntStateOf(3) }
+        
+        androidx.compose.foundation.layout.Column {
+            androidx.compose.material3.Text(
+                text = "現在の評価: $rating",
+                modifier = androidx.compose.ui.Modifier.padding(16.dp)
+            )
+            InteractiveRatingBar(
+                rating = rating,
+                onRatingChanged = { rating = it },
+                modifier = androidx.compose.ui.Modifier.padding(16.dp)
             )
         }
     }

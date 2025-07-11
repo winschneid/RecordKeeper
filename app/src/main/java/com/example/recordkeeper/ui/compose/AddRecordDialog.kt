@@ -30,12 +30,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.example.recordkeeper.R
 import com.example.recordkeeper.data.entity.LiveRecord
 import com.example.recordkeeper.data.entity.MovieRecord
 import com.example.recordkeeper.data.entity.RamenRecord
+import com.example.recordkeeper.ui.theme.RecordKeeperTheme
 import com.example.recordkeeper.viewmodel.RecordViewModel
 
 @Composable
@@ -422,6 +424,121 @@ fun AddRamenRecordForm(
                 modifier = Modifier.weight(1f)
             ) {
                 Text(stringResource(R.string.save))
+            }
+        }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun AddLiveRecordFormPreview() {
+    RecordKeeperTheme {
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+        ) {
+            Column(
+                modifier = Modifier.padding(16.dp)
+            ) {
+                Text(
+                    text = "記録を追加",
+                    style = MaterialTheme.typography.headlineSmall,
+                    modifier = Modifier.padding(bottom = 16.dp)
+                )
+                
+                AddLiveRecordFormPreviewContent()
+            }
+        }
+    }
+}
+
+@Composable
+private fun AddLiveRecordFormPreviewContent() {
+    var title by remember { mutableStateOf("") }
+    var artist by remember { mutableStateOf("") }
+    var venue by remember { mutableStateOf("") }
+    var date by remember { mutableStateOf("") }
+    var rating by remember { mutableIntStateOf(5) }
+    var memo by remember { mutableStateOf("") }
+    
+    Column {
+        OutlinedTextField(
+            value = title,
+            onValueChange = { title = it },
+            label = { Text("ライブタイトル") },
+            modifier = Modifier.fillMaxWidth()
+        )
+        
+        Spacer(modifier = Modifier.height(8.dp))
+        
+        OutlinedTextField(
+            value = artist,
+            onValueChange = { artist = it },
+            label = { Text("アーティスト") },
+            modifier = Modifier.fillMaxWidth()
+        )
+        
+        Spacer(modifier = Modifier.height(8.dp))
+        
+        OutlinedTextField(
+            value = venue,
+            onValueChange = { venue = it },
+            label = { Text("会場") },
+            modifier = Modifier.fillMaxWidth()
+        )
+        
+        Spacer(modifier = Modifier.height(8.dp))
+        
+        OutlinedTextField(
+            value = date,
+            onValueChange = { date = it },
+            label = { Text("日付 (YYYY-MM-DD)") },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            modifier = Modifier.fillMaxWidth()
+        )
+        
+        Spacer(modifier = Modifier.height(16.dp))
+        
+        Text(
+            text = "評価",
+            style = MaterialTheme.typography.bodyMedium
+        )
+        
+        InteractiveRatingBar(
+            rating = rating,
+            onRatingChanged = { rating = it }
+        )
+        
+        Spacer(modifier = Modifier.height(8.dp))
+        
+        OutlinedTextField(
+            value = memo,
+            onValueChange = { memo = it },
+            label = { Text("メモ") },
+            modifier = Modifier.fillMaxWidth(),
+            maxLines = 3
+        )
+        
+        Spacer(modifier = Modifier.height(16.dp))
+        
+        Row(
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            TextButton(
+                onClick = { },
+                modifier = Modifier.weight(1f)
+            ) {
+                Text("キャンセル")
+            }
+            
+            Spacer(modifier = Modifier.width(8.dp))
+            
+            Button(
+                onClick = { },
+                modifier = Modifier.weight(1f)
+            ) {
+                Text("保存")
             }
         }
     }
