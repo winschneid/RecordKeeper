@@ -1,38 +1,38 @@
 [versions]
 # Android & Kotlin
 agp = "8.2.2"
-kotlin = "1.9.21"
-compileSdk = "34"
+kotlin = "2.0.21"
+compileSdk = "35"
 minSdk = "24"
-targetSdk = "34"
+targetSdk = "36"
 versionCode = "1"
 versionName = "1.0"
 
 # Core Android
-core-ktx = "1.12.0"
-lifecycle-runtime-ktx = "2.7.0"
-activity-compose = "1.8.2"
+core-ktx = "1.15.0"
+lifecycle-runtime-ktx = "2.8.7"
+activity-compose = "1.9.3"
 
 # Compose
-compose-bom = "2023.10.01"
-compose-compiler = "1.5.7"
+compose-bom = "2024.12.01"
+compose-compiler = "1.5.15"
 
 # Room
-room = "2.5.0"
+room = "2.6.1"
 
 # ViewModel
-lifecycle-viewmodel = "2.7.0"
+lifecycle-viewmodel = "2.8.7"
 
 # Navigation
-navigation-compose = "2.7.6"
+navigation-compose = "2.8.4"
 
 # Accompanist
-accompanist = "0.32.0"
+accompanist = "0.36.0"
 
 # Testing
 junit = "4.13.2"
-androidx-test-ext-junit = "1.1.5"
-espresso-core = "3.5.1"
+androidx-test-ext-junit = "1.2.1"
+espresso-core = "3.6.1"
 
 [libraries]
 # Core Android
