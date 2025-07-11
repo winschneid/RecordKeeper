@@ -1,0 +1,53 @@
+gitignore
+# IDE files
+.idea/
+*.iml
+
+# Build files
+.gradle/
+build/
+captures/
+local.properties
+
+# Android Studio files
+*.apk
+*.ap_
+*.aab
+*.dex
+*.class
+*.jar
+*.keystore
+*.jks
+
+# Java files (if compiled outside of the IDE)
+# *.class
+
+# MobileFirst specific files (if applicable)
+# .settings/
+# .project
+# .classpath
+# bin/
+# gen/
+
+# Crashlytics files (if applicable)
+# com_crashlytics_export_strings.xml
+# crashlytics.properties
+# crashlytics-build.properties
+# fabric.properties
+
+# Proguard files
+# proguard/
+
+# Lint files
+# lint/
+
+# Test files
+# test-results/
+# test-reports/
+
+# Log files
+# *.log
+
+# Other
+.DS_Store
+Thumbs.db
