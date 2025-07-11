@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">記録キーパー</string>
+    <string name="live_tab">ライブ</string>
+    <string name="movie_tab">映画</string>
+    <string name="ramen_tab">ラーメン</string>
+    <string name="add_record">記録を追加</string>
+    <string name="title">タイトル</string>
+    <string name="date">日付</string>
+    <string name="venue">会場</string>
+    <string name="theater">映画館</string>
+    <string name="shop_name">店名</string>
+    <string name="rating">評価</string>
+    <string name="memo">メモ</string>
+    <string name="save">保存</string>
+    <string name="cancel">キャンセル</string>
+</resources>
