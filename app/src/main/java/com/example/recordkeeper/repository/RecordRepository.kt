@@ -66,22 +66,22 @@ class RecordRepository(
     }
 
     suspend fun getArtistSuggestions(query: String): List<String> {
-        return liveRecordDao.getArtistSuggestions(query)
+        return liveRecordDao.getArtistSuggestionsWithFrequency(query).map { it.artist }
     }
 
     suspend fun getVenueSuggestions(query: String): List<String> {
-        return liveRecordDao.getVenueSuggestions(query)
+        return liveRecordDao.getVenueSuggestionsWithFrequency(query).map { it.venue }
     }
 
     suspend fun getTheaterSuggestions(query: String): List<String> {
-        return movieRecordDao.getTheaterSuggestions(query)
+        return movieRecordDao.getTheaterSuggestionsWithFrequency(query).map { it.theater }
     }
 
     suspend fun getShopNameSuggestions(query: String): List<String> {
-        return ramenRecordDao.getShopNameSuggestions(query)
+        return ramenRecordDao.getShopNameSuggestionsWithFrequency(query).map { it.shopName }
     }
 
     suspend fun getMenuNameSuggestions(query: String): List<String> {
-        return ramenRecordDao.getMenuNameSuggestions(query)
+        return ramenRecordDao.getMenuNameSuggestionsWithFrequency(query).map { it.menuName }
     }
 }

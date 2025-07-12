@@ -2,6 +2,8 @@ package com.example.recordkeeper.data.dao
 
 import androidx.room.*
 import com.example.recordkeeper.data.entity.RamenRecord
+import com.example.recordkeeper.data.entity.ShopSuggestion
+import com.example.recordkeeper.data.entity.MenuSuggestion
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -23,6 +25,12 @@ interface RamenRecordDao {
 
     @Query("SELECT COUNT(*) FROM ramen_records WHERE shopName = :shopName")
     suspend fun getShopVisitCount(shopName: String): Int
+
+    @Query("SELECT shopName, COUNT(*) as count, MAX(date) as latest_date FROM ramen_records WHERE shopName LIKE '%' || :query || '%' GROUP BY shopName ORDER BY count DESC, latest_date DESC")
+    suspend fun getShopNameSuggestionsWithFrequency(query: String): List<ShopSuggestion>
+
+    @Query("SELECT menuName, COUNT(*) as count, MAX(date) as latest_date FROM ramen_records WHERE menuName LIKE '%' || :query || '%' GROUP BY menuName ORDER BY count DESC, latest_date DESC")
+    suspend fun getMenuNameSuggestionsWithFrequency(query: String): List<MenuSuggestion>
 
     @Query("SELECT DISTINCT shopName FROM ramen_records WHERE shopName LIKE '%' || :query || '%' ORDER BY shopName")
     suspend fun getShopNameSuggestions(query: String): List<String>

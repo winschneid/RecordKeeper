@@ -55,7 +55,7 @@ fun DatePickerField(
         ""
     }
     
-    Box(modifier = modifier) {
+    Box(modifier = modifier.clickable { showCalendar = true }) {
         OutlinedTextField(
             value = displayValue,
             onValueChange = { },
@@ -67,9 +67,7 @@ fun DatePickerField(
                     contentDescription = "日付を選択"
                 )
             },
-            modifier = Modifier
-                .fillMaxWidth()
-                .clickable { showCalendar = true }
+            modifier = Modifier.fillMaxWidth()
         )
     }
     

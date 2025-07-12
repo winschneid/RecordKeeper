@@ -22,6 +22,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
@@ -38,14 +39,15 @@ fun SuggestionTextField(
 ) {
     var suggestions by remember { mutableStateOf(emptyList<String>()) }
     var showSuggestions by remember { mutableStateOf(false) }
+    var isFocused by remember { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
 
-    LaunchedEffect(value) {
-        if (value.isNotBlank() && value.length >= 1) {
+    LaunchedEffect(value, isFocused) {
+        if (value.isNotBlank() && value.length >= 1 && isFocused) {
             delay(300) // デバウンス
             scope.launch {
                 suggestions = getSuggestions(value)
-                showSuggestions = suggestions.isNotEmpty()
+                showSuggestions = suggestions.isNotEmpty() && isFocused
             }
         } else {
             suggestions = emptyList()
@@ -58,13 +60,24 @@ fun SuggestionTextField(
             value = value,
             onValueChange = onValueChange,
             label = { Text(label) },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
+                .onFocusChanged { focusState ->
+                    isFocused = focusState.isFocused
+                    if (!focusState.isFocused) {
+                        showSuggestions = false
+                    }
+                }
         )
 
         if (showSuggestions && suggestions.isNotEmpty()) {
             Popup(
                 onDismissRequest = { showSuggestions = false },
-                properties = PopupProperties(focusable = false)
+                properties = PopupProperties(
+                    focusable = false,
+                    dismissOnBackPress = true,
+                    dismissOnClickOutside = true
+                )
             ) {
                 Card(
                     modifier = Modifier
@@ -87,6 +100,7 @@ fun SuggestionTextField(
                                     .clickable {
                                         onValueChange(suggestion)
                                         showSuggestions = false
+                                        isFocused = false
                                     }
                                     .padding(12.dp),
                                 style = MaterialTheme.typography.bodyMedium
