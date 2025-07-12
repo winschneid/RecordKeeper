@@ -87,11 +87,6 @@ fun RamenRecordCard(
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
-                    Text(
-                        text = record.location,
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
                 }
                 IconButton(onClick = onDelete) {
                     Icon(
