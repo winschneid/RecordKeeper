@@ -2,6 +2,7 @@ package com.example.recordkeeper.ui.compose
 
 import android.widget.CalendarView
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -55,21 +56,25 @@ fun DatePickerField(
         ""
     }
     
-    Box(modifier = modifier.clickable { showCalendar = true }) {
-        OutlinedTextField(
-            value = displayValue,
-            onValueChange = { },
-            label = { Text(label) },
-            readOnly = true,
-            trailingIcon = {
-                Icon(
-                    imageVector = Icons.Default.DateRange,
-                    contentDescription = "日付を選択"
-                )
-            },
-            modifier = Modifier.fillMaxWidth()
-        )
-    }
+    OutlinedTextField(
+        value = displayValue,
+        onValueChange = { },
+        label = { Text(label) },
+        readOnly = true,
+        trailingIcon = {
+            Icon(
+                imageVector = Icons.Default.DateRange,
+                contentDescription = "日付を選択",
+                modifier = Modifier.clickable { showCalendar = true }
+            )
+        },
+        modifier = modifier
+            .fillMaxWidth()
+            .clickable(
+                interactionSource = remember { MutableInteractionSource() },
+                indication = null
+            ) { showCalendar = true }
+    )
     
     if (showCalendar) {
         Dialog(onDismissRequest = { showCalendar = false }) {

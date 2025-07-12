@@ -11,6 +11,8 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -24,8 +26,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Popup
-import androidx.compose.ui.window.PopupProperties
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -46,8 +46,13 @@ fun SuggestionTextField(
         if (value.isNotBlank() && value.length >= 1 && isFocused) {
             delay(300) // デバウンス
             scope.launch {
-                suggestions = getSuggestions(value)
-                showSuggestions = suggestions.isNotEmpty() && isFocused
+                try {
+                    suggestions = getSuggestions(value)
+                    showSuggestions = suggestions.isNotEmpty() && isFocused
+                } catch (e: Exception) {
+                    suggestions = emptyList()
+                    showSuggestions = false
+                }
             }
         } else {
             suggestions = emptyList()
@@ -70,44 +75,28 @@ fun SuggestionTextField(
                 }
         )
 
-        if (showSuggestions && suggestions.isNotEmpty()) {
-            Popup(
-                onDismissRequest = { showSuggestions = false },
-                properties = PopupProperties(
-                    focusable = false,
-                    dismissOnBackPress = true,
-                    dismissOnClickOutside = true
-                )
-            ) {
-                Card(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .heightIn(max = 200.dp),
-                    shape = RoundedCornerShape(8.dp),
-                    colors = CardDefaults.cardColors(
-                        containerColor = MaterialTheme.colorScheme.surface
-                    ),
-                    elevation = CardDefaults.cardElevation(
-                        defaultElevation = 8.dp
-                    )
-                ) {
-                    LazyColumn {
-                        items(suggestions.take(5)) { suggestion ->
-                            Text(
-                                text = suggestion,
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .clickable {
-                                        onValueChange(suggestion)
-                                        showSuggestions = false
-                                        isFocused = false
-                                    }
-                                    .padding(12.dp),
-                                style = MaterialTheme.typography.bodyMedium
-                            )
-                        }
+        DropdownMenu(
+            expanded = showSuggestions && suggestions.isNotEmpty(),
+            onDismissRequest = { 
+                showSuggestions = false
+                isFocused = false
+            },
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            suggestions.take(5).forEach { suggestion ->
+                DropdownMenuItem(
+                    text = { 
+                        Text(
+                            text = suggestion,
+                            style = MaterialTheme.typography.bodyMedium
+                        ) 
+                    },
+                    onClick = {
+                        onValueChange(suggestion)
+                        showSuggestions = false
+                        isFocused = false
                     }
-                }
+                )
             }
         }
     }
