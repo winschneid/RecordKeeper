@@ -56,25 +56,33 @@ fun DatePickerField(
         ""
     }
     
-    OutlinedTextField(
-        value = displayValue,
-        onValueChange = { },
-        label = { Text(label) },
-        readOnly = true,
-        trailingIcon = {
-            Icon(
-                imageVector = Icons.Default.DateRange,
-                contentDescription = "日付を選択",
-                modifier = Modifier.clickable { showCalendar = true }
-            )
-        },
-        modifier = modifier
-            .fillMaxWidth()
-            .clickable(
-                interactionSource = remember { MutableInteractionSource() },
-                indication = null
-            ) { showCalendar = true }
-    )
+    Box(
+        modifier = modifier.fillMaxWidth()
+    ) {
+        OutlinedTextField(
+            value = displayValue,
+            onValueChange = { },
+            label = { Text(label) },
+            readOnly = true,
+            trailingIcon = {
+                Icon(
+                    imageVector = Icons.Default.DateRange,
+                    contentDescription = "日付を選択"
+                )
+            },
+            modifier = Modifier.fillMaxWidth()
+        )
+        
+        // 透明なクリック領域をOutlinedTextFieldの上に配置
+        Box(
+            modifier = Modifier
+                .matchParentSize()
+                .clickable(
+                    interactionSource = remember { MutableInteractionSource() },
+                    indication = null
+                ) { showCalendar = true }
+        )
+    }
     
     if (showCalendar) {
         Dialog(onDismissRequest = { showCalendar = false }) {

@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.ui.platform.LocalConfiguration
@@ -35,7 +36,9 @@ import androidx.compose.runtime.rememberCoroutineScope
 import kotlinx.coroutines.launch
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -76,58 +79,50 @@ fun AddRecordDialog(
                 defaultElevation = 8.dp
             )
         ) {
-            Column(
-                modifier = Modifier
-                    .padding(20.dp)
-                    .verticalScroll(rememberScrollState())
+            Text(
+                text = stringResource(R.string.add_record),
+                style = MaterialTheme.typography.headlineSmall,
+                color = MaterialTheme.colorScheme.onSurface,
+                modifier = Modifier.padding(20.dp, 20.dp, 20.dp, 0.dp)
+            )
+            
+            ScrollableTabRow(
+                selectedTabIndex = currentTab,
+                modifier = Modifier.fillMaxWidth(),
+                containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                edgePadding = 0.dp
             ) {
-                Text(
-                    text = stringResource(R.string.add_record),
-                    style = MaterialTheme.typography.headlineSmall,
-                    color = MaterialTheme.colorScheme.onSurface,
-                    modifier = Modifier.padding(bottom = 20.dp)
+                tabs.forEachIndexed { index, title ->
+                    Tab(
+                        selected = currentTab == index,
+                        onClick = { currentTab = index },
+                        text = { 
+                            Text(
+                                text = title,
+                                style = MaterialTheme.typography.labelMedium,
+                                maxLines = 1
+                            )
+                        },
+                        selectedContentColor = MaterialTheme.colorScheme.primary,
+                        unselectedContentColor = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+            }
+            
+            when (currentTab) {
+                0 -> AddLiveRecordForm(
+                    viewModel = viewModel,
+                    onDismiss = onDismiss
                 )
-                
-                ScrollableTabRow(
-                    selectedTabIndex = currentTab,
-                    modifier = Modifier.fillMaxWidth(),
-                    containerColor = MaterialTheme.colorScheme.surfaceVariant,
-                    contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                    edgePadding = 0.dp
-                ) {
-                    tabs.forEachIndexed { index, title ->
-                        Tab(
-                            selected = currentTab == index,
-                            onClick = { currentTab = index },
-                            text = { 
-                                Text(
-                                    text = title,
-                                    style = MaterialTheme.typography.labelMedium,
-                                    maxLines = 1
-                                )
-                            },
-                            selectedContentColor = MaterialTheme.colorScheme.primary,
-                            unselectedContentColor = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                    }
-                }
-                
-                Spacer(modifier = Modifier.height(16.dp))
-                
-                when (currentTab) {
-                    0 -> AddLiveRecordForm(
-                        viewModel = viewModel,
-                        onDismiss = onDismiss
-                    )
-                    1 -> AddMovieRecordForm(
-                        viewModel = viewModel,
-                        onDismiss = onDismiss
-                    )
-                    2 -> AddRamenRecordForm(
-                        viewModel = viewModel,
-                        onDismiss = onDismiss
-                    )
-                }
+                1 -> AddMovieRecordForm(
+                    viewModel = viewModel,
+                    onDismiss = onDismiss
+                )
+                2 -> AddRamenRecordForm(
+                    viewModel = viewModel,
+                    onDismiss = onDismiss
+                )
             }
         }
     }
@@ -157,11 +152,17 @@ fun AddLiveRecordForm(
         }
     }
     
-    Column {
+    Column(
+        modifier = Modifier.padding(20.dp)
+    ) {
         OutlinedTextField(
             value = title,
             onValueChange = { title = it },
             label = { Text("ライブタイトル") },
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Text,
+                imeAction = ImeAction.Next
+            ),
             modifier = Modifier.fillMaxWidth()
         )
         
@@ -171,6 +172,10 @@ fun AddLiveRecordForm(
             value = artist,
             onValueChange = { artist = it },
             label = { Text("アーティスト") },
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Text,
+                imeAction = ImeAction.Next
+            ),
             modifier = Modifier.fillMaxWidth()
         )
         
@@ -298,7 +303,9 @@ fun AddMovieRecordForm(
         }
     }
     
-    Column {
+    Column(
+        modifier = Modifier.padding(20.dp)
+    ) {
         OutlinedTextField(
             value = title,
             onValueChange = { title = it },
@@ -438,7 +445,9 @@ fun AddRamenRecordForm(
         }
     }
     
-    Column {
+    Column(
+        modifier = Modifier.padding(20.dp)
+    ) {
         OutlinedTextField(
             value = shopName,
             onValueChange = { shopName = it },
