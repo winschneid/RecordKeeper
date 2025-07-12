@@ -52,4 +52,36 @@ class RecordRepository(
     suspend fun deleteRamenRecord(ramenRecord: RamenRecord) {
         ramenRecordDao.deleteRamenRecord(ramenRecord)
     }
+
+    suspend fun getArtistLiveCount(artist: String): Int {
+        return liveRecordDao.getArtistLiveCount(artist)
+    }
+
+    suspend fun getTheaterVisitCount(theater: String): Int {
+        return movieRecordDao.getTheaterVisitCount(theater)
+    }
+
+    suspend fun getShopVisitCount(shopName: String): Int {
+        return ramenRecordDao.getShopVisitCount(shopName)
+    }
+
+    suspend fun getArtistSuggestions(query: String): List<String> {
+        return liveRecordDao.getArtistSuggestions(query)
+    }
+
+    suspend fun getVenueSuggestions(query: String): List<String> {
+        return liveRecordDao.getVenueSuggestions(query)
+    }
+
+    suspend fun getTheaterSuggestions(query: String): List<String> {
+        return movieRecordDao.getTheaterSuggestions(query)
+    }
+
+    suspend fun getShopNameSuggestions(query: String): List<String> {
+        return ramenRecordDao.getShopNameSuggestions(query)
+    }
+
+    suspend fun getMenuNameSuggestions(query: String): List<String> {
+        return ramenRecordDao.getMenuNameSuggestions(query)
+    }
 }

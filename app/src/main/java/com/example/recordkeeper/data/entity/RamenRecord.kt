@@ -9,7 +9,6 @@ data class RamenRecord(
     val id: Long = 0,
     val shopName: String,
     val menuName: String,
-    val location: String,
     val date: String,
     val rating: Int,
     val memo: String = ""

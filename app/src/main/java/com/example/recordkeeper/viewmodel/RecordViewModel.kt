@@ -84,4 +84,36 @@ class RecordViewModel(application: Application) : AndroidViewModel(application) 
             repository.deleteRamenRecord(ramenRecord)
         }
     }
+
+    suspend fun getArtistLiveCount(artist: String): Int {
+        return repository.getArtistLiveCount(artist)
+    }
+
+    suspend fun getTheaterVisitCount(theater: String): Int {
+        return repository.getTheaterVisitCount(theater)
+    }
+
+    suspend fun getShopVisitCount(shopName: String): Int {
+        return repository.getShopVisitCount(shopName)
+    }
+
+    suspend fun getArtistSuggestions(query: String): List<String> {
+        return repository.getArtistSuggestions(query)
+    }
+
+    suspend fun getVenueSuggestions(query: String): List<String> {
+        return repository.getVenueSuggestions(query)
+    }
+
+    suspend fun getTheaterSuggestions(query: String): List<String> {
+        return repository.getTheaterSuggestions(query)
+    }
+
+    suspend fun getShopNameSuggestions(query: String): List<String> {
+        return repository.getShopNameSuggestions(query)
+    }
+
+    suspend fun getMenuNameSuggestions(query: String): List<String> {
+        return repository.getMenuNameSuggestions(query)
+    }
 }

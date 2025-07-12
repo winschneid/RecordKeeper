@@ -20,4 +20,13 @@ interface RamenRecordDao {
 
     @Query("SELECT * FROM ramen_records WHERE id = :id")
     suspend fun getRamenRecordById(id: Long): RamenRecord?
+
+    @Query("SELECT COUNT(*) FROM ramen_records WHERE shopName = :shopName")
+    suspend fun getShopVisitCount(shopName: String): Int
+
+    @Query("SELECT DISTINCT shopName FROM ramen_records WHERE shopName LIKE '%' || :query || '%' ORDER BY shopName")
+    suspend fun getShopNameSuggestions(query: String): List<String>
+
+    @Query("SELECT DISTINCT menuName FROM ramen_records WHERE menuName LIKE '%' || :query || '%' ORDER BY menuName")
+    suspend fun getMenuNameSuggestions(query: String): List<String>
 }

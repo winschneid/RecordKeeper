@@ -11,6 +11,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
@@ -29,6 +30,9 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.rememberCoroutineScope
+import kotlinx.coroutines.launch
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -59,9 +63,10 @@ fun AddRecordDialog(
     )
 
     Dialog(onDismissRequest = onDismiss) {
+        val configuration = LocalConfiguration.current
         Card(
             modifier = Modifier
-                .fillMaxWidth()
+                .fillMaxWidth(0.9f)
                 .padding(16.dp),
             shape = RoundedCornerShape(16.dp),
             colors = CardDefaults.cardColors(
@@ -139,6 +144,18 @@ fun AddLiveRecordForm(
     var date by remember { mutableStateOf(DateUtils.formatDate(DateUtils.getCurrentDate())) }
     var rating by remember { mutableIntStateOf(5) }
     var memo by remember { mutableStateOf("") }
+    var artistCount by remember { mutableIntStateOf(0) }
+    val scope = rememberCoroutineScope()
+
+    LaunchedEffect(artist) {
+        if (artist.isNotBlank()) {
+            scope.launch {
+                artistCount = viewModel.getArtistLiveCount(artist)
+            }
+        } else {
+            artistCount = 0
+        }
+    }
     
     Column {
         OutlinedTextField(
@@ -150,19 +167,30 @@ fun AddLiveRecordForm(
         
         Spacer(modifier = Modifier.height(8.dp))
         
-        OutlinedTextField(
+        SuggestionTextField(
             value = artist,
             onValueChange = { artist = it },
-            label = { Text("アーティスト") },
+            label = "アーティスト",
+            getSuggestions = { query -> viewModel.getArtistSuggestions(query) },
             modifier = Modifier.fillMaxWidth()
         )
         
+        if (artistCount > 0) {
+            Text(
+                text = "このアーティストのライブ: ${artistCount}回",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.padding(start = 16.dp, top = 4.dp)
+            )
+        }
+        
         Spacer(modifier = Modifier.height(8.dp))
         
-        OutlinedTextField(
+        SuggestionTextField(
             value = venue,
             onValueChange = { venue = it },
-            label = { Text("会場") },
+            label = "会場",
+            getSuggestions = { query -> viewModel.getVenueSuggestions(query) },
             modifier = Modifier.fillMaxWidth()
         )
         
@@ -254,6 +282,18 @@ fun AddMovieRecordForm(
     var date by remember { mutableStateOf(DateUtils.formatDate(DateUtils.getCurrentDate())) }
     var rating by remember { mutableIntStateOf(5) }
     var memo by remember { mutableStateOf("") }
+    var theaterCount by remember { mutableIntStateOf(0) }
+    val scope = rememberCoroutineScope()
+
+    LaunchedEffect(theater) {
+        if (theater.isNotBlank()) {
+            scope.launch {
+                theaterCount = viewModel.getTheaterVisitCount(theater)
+            }
+        } else {
+            theaterCount = 0
+        }
+    }
     
     Column {
         OutlinedTextField(
@@ -274,12 +314,22 @@ fun AddMovieRecordForm(
         
         Spacer(modifier = Modifier.height(8.dp))
         
-        OutlinedTextField(
+        SuggestionTextField(
             value = theater,
             onValueChange = { theater = it },
-            label = { Text("映画館") },
+            label = "映画館",
+            getSuggestions = { query -> viewModel.getTheaterSuggestions(query) },
             modifier = Modifier.fillMaxWidth()
         )
+        
+        if (theaterCount > 0) {
+            Text(
+                text = "この映画館への訪問: ${theaterCount}回",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.padding(start = 16.dp, top = 4.dp)
+            )
+        }
         
         Spacer(modifier = Modifier.height(8.dp))
         
@@ -365,34 +415,47 @@ fun AddRamenRecordForm(
 ) {
     var shopName by remember { mutableStateOf("") }
     var menuName by remember { mutableStateOf("") }
-    var location by remember { mutableStateOf("") }
     var date by remember { mutableStateOf(DateUtils.formatDate(DateUtils.getCurrentDate())) }
     var rating by remember { mutableIntStateOf(5) }
     var memo by remember { mutableStateOf("") }
+    var shopCount by remember { mutableIntStateOf(0) }
+    val scope = rememberCoroutineScope()
+
+    LaunchedEffect(shopName) {
+        if (shopName.isNotBlank()) {
+            scope.launch {
+                shopCount = viewModel.getShopVisitCount(shopName)
+            }
+        } else {
+            shopCount = 0
+        }
+    }
     
     Column {
-        OutlinedTextField(
+        SuggestionTextField(
             value = shopName,
             onValueChange = { shopName = it },
-            label = { Text("店名") },
+            label = "店名",
+            getSuggestions = { query -> viewModel.getShopNameSuggestions(query) },
             modifier = Modifier.fillMaxWidth()
         )
         
+        if (shopCount > 0) {
+            Text(
+                text = "この店への訪問: ${shopCount}回",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.padding(start = 16.dp, top = 4.dp)
+            )
+        }
+        
         Spacer(modifier = Modifier.height(8.dp))
         
-        OutlinedTextField(
+        SuggestionTextField(
             value = menuName,
             onValueChange = { menuName = it },
-            label = { Text("メニュー名") },
-            modifier = Modifier.fillMaxWidth()
-        )
-        
-        Spacer(modifier = Modifier.height(8.dp))
-        
-        OutlinedTextField(
-            value = location,
-            onValueChange = { location = it },
-            label = { Text("場所") },
+            label = "メニュー名",
+            getSuggestions = { query -> viewModel.getMenuNameSuggestions(query) },
             modifier = Modifier.fillMaxWidth()
         )
         
@@ -447,12 +510,11 @@ fun AddRamenRecordForm(
             
             Button(
                 onClick = {
-                    if (shopName.isNotBlank() && menuName.isNotBlank() && location.isNotBlank() && date.isNotBlank()) {
+                    if (shopName.isNotBlank() && menuName.isNotBlank() && date.isNotBlank()) {
                         viewModel.insertRamenRecord(
                             RamenRecord(
                                 shopName = shopName,
                                 menuName = menuName,
-                                location = location,
                                 date = date,
                                 rating = rating,
                                 memo = memo

@@ -20,4 +20,10 @@ interface MovieRecordDao {
 
     @Query("SELECT * FROM movie_records WHERE id = :id")
     suspend fun getMovieRecordById(id: Long): MovieRecord?
+
+    @Query("SELECT COUNT(*) FROM movie_records WHERE theater = :theater")
+    suspend fun getTheaterVisitCount(theater: String): Int
+
+    @Query("SELECT DISTINCT theater FROM movie_records WHERE theater LIKE '%' || :query || '%' ORDER BY theater")
+    suspend fun getTheaterSuggestions(query: String): List<String>
 }
