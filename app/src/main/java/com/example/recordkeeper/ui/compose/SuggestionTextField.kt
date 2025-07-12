@@ -11,8 +11,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -26,6 +24,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Popup
+import androidx.compose.ui.window.PopupProperties
+import androidx.compose.ui.zIndex
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -70,33 +71,55 @@ fun SuggestionTextField(
                 .onFocusChanged { focusState ->
                     isFocused = focusState.isFocused
                     if (!focusState.isFocused) {
-                        showSuggestions = false
+                        // 少し遅延させてからサジェストを閉じる（クリック処理のため）
+                        scope.launch {
+                            delay(100)
+                            showSuggestions = false
+                        }
                     }
                 }
         )
 
-        DropdownMenu(
-            expanded = showSuggestions && suggestions.isNotEmpty(),
-            onDismissRequest = { 
-                showSuggestions = false
-                isFocused = false
-            },
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            suggestions.take(5).forEach { suggestion ->
-                DropdownMenuItem(
-                    text = { 
-                        Text(
-                            text = suggestion,
-                            style = MaterialTheme.typography.bodyMedium
-                        ) 
-                    },
-                    onClick = {
-                        onValueChange(suggestion)
-                        showSuggestions = false
-                        isFocused = false
-                    }
+        if (showSuggestions && suggestions.isNotEmpty()) {
+            Popup(
+                onDismissRequest = { 
+                    showSuggestions = false
+                },
+                properties = PopupProperties(
+                    focusable = false,
+                    dismissOnBackPress = true,
+                    dismissOnClickOutside = true
                 )
+            ) {
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .heightIn(max = 200.dp)
+                        .zIndex(1000f),
+                    shape = RoundedCornerShape(8.dp),
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.surface
+                    ),
+                    elevation = CardDefaults.cardElevation(
+                        defaultElevation = 8.dp
+                    )
+                ) {
+                    LazyColumn {
+                        items(suggestions.take(5)) { suggestion ->
+                            Text(
+                                text = suggestion,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .clickable {
+                                        onValueChange(suggestion)
+                                        showSuggestions = false
+                                    }
+                                    .padding(12.dp),
+                                style = MaterialTheme.typography.bodyMedium
+                            )
+                        }
+                    }
+                }
             }
         }
     }

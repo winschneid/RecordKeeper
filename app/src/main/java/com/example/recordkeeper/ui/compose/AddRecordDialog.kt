@@ -167,11 +167,10 @@ fun AddLiveRecordForm(
         
         Spacer(modifier = Modifier.height(8.dp))
         
-        SuggestionTextField(
+        OutlinedTextField(
             value = artist,
             onValueChange = { artist = it },
-            label = "アーティスト",
-            getSuggestions = { query -> viewModel.getArtistSuggestions(query) },
+            label = { Text("アーティスト") },
             modifier = Modifier.fillMaxWidth()
         )
         
@@ -186,11 +185,10 @@ fun AddLiveRecordForm(
         
         Spacer(modifier = Modifier.height(8.dp))
         
-        SuggestionTextField(
+        OutlinedTextField(
             value = venue,
             onValueChange = { venue = it },
-            label = "会場",
-            getSuggestions = { query -> viewModel.getVenueSuggestions(query) },
+            label = { Text("会場") },
             modifier = Modifier.fillMaxWidth()
         )
         
@@ -245,7 +243,10 @@ fun AddLiveRecordForm(
             
             Button(
                 onClick = {
+                    println("保存ボタンがクリックされました - ライブ記録")
+                    println("title: '$title', artist: '$artist', venue: '$venue', date: '$date'")
                     if (title.isNotBlank() && artist.isNotBlank() && venue.isNotBlank() && date.isNotBlank()) {
+                        println("条件をクリア、レコードを保存中...")
                         viewModel.insertLiveRecord(
                             LiveRecord(
                                 title = title,
@@ -257,6 +258,8 @@ fun AddLiveRecordForm(
                             )
                         )
                         onDismiss()
+                    } else {
+                        println("保存条件が満たされていません")
                     }
                 },
                 modifier = Modifier.weight(1f),
@@ -314,11 +317,10 @@ fun AddMovieRecordForm(
         
         Spacer(modifier = Modifier.height(8.dp))
         
-        SuggestionTextField(
+        OutlinedTextField(
             value = theater,
             onValueChange = { theater = it },
-            label = "映画館",
-            getSuggestions = { query -> viewModel.getTheaterSuggestions(query) },
+            label = { Text("映画館") },
             modifier = Modifier.fillMaxWidth()
         )
         
@@ -382,7 +384,10 @@ fun AddMovieRecordForm(
             
             Button(
                 onClick = {
+                    println("保存ボタンがクリックされました - 映画記録")
+                    println("title: '$title', director: '$director', theater: '$theater', date: '$date'")
                     if (title.isNotBlank() && director.isNotBlank() && theater.isNotBlank() && date.isNotBlank()) {
+                        println("条件をクリア、レコードを保存中...")
                         viewModel.insertMovieRecord(
                             MovieRecord(
                                 title = title,
@@ -394,6 +399,8 @@ fun AddMovieRecordForm(
                             )
                         )
                         onDismiss()
+                    } else {
+                        println("保存条件が満たされていません")
                     }
                 },
                 modifier = Modifier.weight(1f),
@@ -432,11 +439,10 @@ fun AddRamenRecordForm(
     }
     
     Column {
-        SuggestionTextField(
+        OutlinedTextField(
             value = shopName,
             onValueChange = { shopName = it },
-            label = "店名",
-            getSuggestions = { query -> viewModel.getShopNameSuggestions(query) },
+            label = { Text("店名") },
             modifier = Modifier.fillMaxWidth()
         )
         
@@ -451,11 +457,10 @@ fun AddRamenRecordForm(
         
         Spacer(modifier = Modifier.height(8.dp))
         
-        SuggestionTextField(
+        OutlinedTextField(
             value = menuName,
             onValueChange = { menuName = it },
-            label = "メニュー名",
-            getSuggestions = { query -> viewModel.getMenuNameSuggestions(query) },
+            label = { Text("メニュー名") },
             modifier = Modifier.fillMaxWidth()
         )
         
@@ -510,7 +515,10 @@ fun AddRamenRecordForm(
             
             Button(
                 onClick = {
+                    println("保存ボタンがクリックされました - ラーメン記録")
+                    println("shopName: '$shopName', menuName: '$menuName', date: '$date'")
                     if (shopName.isNotBlank() && menuName.isNotBlank() && date.isNotBlank()) {
+                        println("条件をクリア、レコードを保存中...")
                         viewModel.insertRamenRecord(
                             RamenRecord(
                                 shopName = shopName,
@@ -521,6 +529,8 @@ fun AddRamenRecordForm(
                             )
                         )
                         onDismiss()
+                    } else {
+                        println("保存条件が満たされていません")
                     }
                 },
                 modifier = Modifier.weight(1f),
