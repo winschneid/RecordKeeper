@@ -250,7 +250,8 @@ fun AddLiveRecordForm(
                 onClick = {
                     println("保存ボタンがクリックされました - ライブ記録")
                     println("title: '$title', artist: '$artist', venue: '$venue', date: '$date'")
-                    if (title.isNotBlank() && artist.isNotBlank() && venue.isNotBlank() && date.isNotBlank()) {
+                    // 最低限、タイトルかアーティストのどちらかがあれば保存可能
+                    if (title.isNotBlank() || artist.isNotBlank()) {
                         println("条件をクリア、レコードを保存中...")
                         viewModel.insertLiveRecord(
                             LiveRecord(
@@ -264,7 +265,7 @@ fun AddLiveRecordForm(
                         )
                         onDismiss()
                     } else {
-                        println("保存条件が満たされていません")
+                        println("タイトルまたはアーティスト名のどちらかを入力してください")
                     }
                 },
                 modifier = Modifier.weight(1f),
@@ -393,7 +394,8 @@ fun AddMovieRecordForm(
                 onClick = {
                     println("保存ボタンがクリックされました - 映画記録")
                     println("title: '$title', director: '$director', theater: '$theater', date: '$date'")
-                    if (title.isNotBlank() && director.isNotBlank() && theater.isNotBlank() && date.isNotBlank()) {
+                    // 最低限、タイトルがあれば保存可能
+                    if (title.isNotBlank()) {
                         println("条件をクリア、レコードを保存中...")
                         viewModel.insertMovieRecord(
                             MovieRecord(
@@ -407,7 +409,7 @@ fun AddMovieRecordForm(
                         )
                         onDismiss()
                     } else {
-                        println("保存条件が満たされていません")
+                        println("映画タイトルを入力してください")
                     }
                 },
                 modifier = Modifier.weight(1f),
@@ -526,7 +528,8 @@ fun AddRamenRecordForm(
                 onClick = {
                     println("保存ボタンがクリックされました - ラーメン記録")
                     println("shopName: '$shopName', menuName: '$menuName', date: '$date'")
-                    if (shopName.isNotBlank() && menuName.isNotBlank() && date.isNotBlank()) {
+                    // 最低限、店名かメニュー名のどちらかがあれば保存可能
+                    if (shopName.isNotBlank() || menuName.isNotBlank()) {
                         println("条件をクリア、レコードを保存中...")
                         viewModel.insertRamenRecord(
                             RamenRecord(
@@ -539,7 +542,7 @@ fun AddRamenRecordForm(
                         )
                         onDismiss()
                     } else {
-                        println("保存条件が満たされていません")
+                        println("店名またはメニュー名のどちらかを入力してください")
                     }
                 },
                 modifier = Modifier.weight(1f),
