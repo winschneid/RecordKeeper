@@ -26,6 +26,9 @@ interface RamenRecordDao {
     @Query("SELECT COUNT(*) FROM ramen_records WHERE shopName = :shopName")
     suspend fun getShopVisitCount(shopName: String): Int
 
+    @Query("SELECT COUNT(*) FROM ramen_records WHERE menuName = :menuName")
+    suspend fun getMenuCount(menuName: String): Int
+
     @Query("SELECT shopName, COUNT(*) as count, MAX(date) as latest_date FROM ramen_records WHERE shopName LIKE '%' || :query || '%' GROUP BY shopName ORDER BY count DESC, latest_date DESC")
     suspend fun getShopNameSuggestionsWithFrequency(query: String): List<ShopSuggestion>
 

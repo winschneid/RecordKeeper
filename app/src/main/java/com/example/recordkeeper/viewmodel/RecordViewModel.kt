@@ -97,6 +97,10 @@ class RecordViewModel(application: Application) : AndroidViewModel(application) 
         return repository.getShopVisitCount(shopName)
     }
 
+    suspend fun getMenuCount(menuName: String): Int {
+        return repository.getMenuCount(menuName)
+    }
+
     suspend fun getArtistSuggestions(query: String): List<String> {
         return repository.getArtistSuggestions(query)
     }

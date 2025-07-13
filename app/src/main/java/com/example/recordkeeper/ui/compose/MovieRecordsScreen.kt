@@ -18,8 +18,14 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
+import kotlinx.coroutines.launch
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -50,7 +56,8 @@ fun MovieRecordsScreen(viewModel: RecordViewModel) {
             items(movieRecords) { record ->
                 MovieRecordCard(
                     record = record,
-                    onDelete = { viewModel.deleteMovieRecord(record) }
+                    onDelete = { viewModel.deleteMovieRecord(record) },
+                    viewModel = viewModel
                 )
             }
         }
@@ -60,8 +67,20 @@ fun MovieRecordsScreen(viewModel: RecordViewModel) {
 @Composable
 fun MovieRecordCard(
     record: MovieRecord,
-    onDelete: () -> Unit
+    onDelete: () -> Unit,
+    viewModel: RecordViewModel
 ) {
+    var theaterCount by remember { mutableIntStateOf(0) }
+    val scope = rememberCoroutineScope()
+
+    LaunchedEffect(record.theater) {
+        if (record.theater.isNotBlank()) {
+            scope.launch {
+                // 映画館の訪問回数を取得
+                theaterCount = viewModel.getTheaterVisitCount(record.theater)
+            }
+        }
+    }
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -87,11 +106,21 @@ fun MovieRecordCard(
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
-                    Text(
-                        text = record.theater,
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
+                    Row {
+                        Text(
+                            text = record.theater,
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            modifier = Modifier.weight(1f)
+                        )
+                        if (theaterCount > 1) {
+                            Text(
+                                text = "${theaterCount}回目",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.primary
+                            )
+                        }
+                    }
                 }
                 IconButton(onClick = onDelete) {
                     Icon(

@@ -18,13 +18,19 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.launch
 import com.example.recordkeeper.data.entity.LiveRecord
 import com.example.recordkeeper.ui.theme.RecordKeeperTheme
 import com.example.recordkeeper.viewmodel.RecordViewModel
@@ -52,7 +58,8 @@ fun LiveRecordsScreen(viewModel: RecordViewModel) {
             items(liveRecords) { record ->
                 LiveRecordCard(
                     record = record,
-                    onDelete = { viewModel.deleteLiveRecord(record) }
+                    onDelete = { viewModel.deleteLiveRecord(record) },
+                    viewModel = viewModel
                 )
             }
         }
@@ -62,8 +69,20 @@ fun LiveRecordsScreen(viewModel: RecordViewModel) {
 @Composable
 fun LiveRecordCard(
     record: LiveRecord,
-    onDelete: () -> Unit
+    onDelete: () -> Unit,
+    viewModel: RecordViewModel
 ) {
+    var artistCount by remember { mutableIntStateOf(0) }
+    val scope = rememberCoroutineScope()
+
+    LaunchedEffect(record.artist) {
+        if (record.artist.isNotBlank()) {
+            scope.launch {
+                // アーティストのライブ回数を取得
+                artistCount = viewModel.getArtistLiveCount(record.artist)
+            }
+        }
+    }
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -84,11 +103,21 @@ fun LiveRecordCard(
                         style = MaterialTheme.typography.headlineSmall,
                         fontWeight = FontWeight.Bold
                     )
-                    Text(
-                        text = record.artist,
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
+                    Row {
+                        Text(
+                            text = record.artist,
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            modifier = Modifier.weight(1f)
+                        )
+                        if (artistCount > 1) {
+                            Text(
+                                text = "${artistCount}回目",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.primary
+                            )
+                        }
+                    }
                     Text(
                         text = record.venue,
                         style = MaterialTheme.typography.bodySmall,
@@ -174,7 +203,8 @@ private fun LiveRecordsScreenWithDataPreview() {
             items(sampleLiveRecords) { record ->
                 LiveRecordCard(
                     record = record,
-                    onDelete = {}
+                    onDelete = {},
+                    viewModel = null!! // Preview用のダミー
                 )
             }
         }

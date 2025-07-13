@@ -18,8 +18,14 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
+import kotlinx.coroutines.launch
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -50,7 +56,8 @@ fun RamenRecordsScreen(viewModel: RecordViewModel) {
             items(ramenRecords) { record ->
                 RamenRecordCard(
                     record = record,
-                    onDelete = { viewModel.deleteRamenRecord(record) }
+                    onDelete = { viewModel.deleteRamenRecord(record) },
+                    viewModel = viewModel
                 )
             }
         }
@@ -60,8 +67,23 @@ fun RamenRecordsScreen(viewModel: RecordViewModel) {
 @Composable
 fun RamenRecordCard(
     record: RamenRecord,
-    onDelete: () -> Unit
+    onDelete: () -> Unit,
+    viewModel: RecordViewModel
 ) {
+    var shopCount by remember { mutableIntStateOf(0) }
+    var menuCount by remember { mutableIntStateOf(0) }
+    val scope = rememberCoroutineScope()
+
+    LaunchedEffect(record.shopName, record.menuName) {
+        scope.launch {
+            if (record.shopName.isNotBlank()) {
+                shopCount = viewModel.getShopVisitCount(record.shopName)
+            }
+            if (record.menuName.isNotBlank()) {
+                menuCount = viewModel.getMenuCount(record.menuName)
+            }
+        }
+    }
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -77,16 +99,36 @@ fun RamenRecordCard(
                 verticalAlignment = Alignment.Top
             ) {
                 Column(modifier = Modifier.weight(1f)) {
-                    Text(
-                        text = record.shopName,
-                        style = MaterialTheme.typography.headlineSmall,
-                        fontWeight = FontWeight.Bold
-                    )
-                    Text(
-                        text = record.menuName,
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
+                    Row {
+                        Text(
+                            text = record.shopName,
+                            style = MaterialTheme.typography.headlineSmall,
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier.weight(1f)
+                        )
+                        if (shopCount > 1) {
+                            Text(
+                                text = "${shopCount}回目",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.primary
+                            )
+                        }
+                    }
+                    Row {
+                        Text(
+                            text = record.menuName,
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            modifier = Modifier.weight(1f)
+                        )
+                        if (menuCount > 1) {
+                            Text(
+                                text = "${menuCount}回目",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.primary
+                            )
+                        }
+                    }
                 }
                 IconButton(onClick = onDelete) {
                     Icon(

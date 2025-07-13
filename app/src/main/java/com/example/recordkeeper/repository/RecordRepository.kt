@@ -65,6 +65,10 @@ class RecordRepository(
         return ramenRecordDao.getShopVisitCount(shopName)
     }
 
+    suspend fun getMenuCount(menuName: String): Int {
+        return ramenRecordDao.getMenuCount(menuName)
+    }
+
     suspend fun getArtistSuggestions(query: String): List<String> {
         return liveRecordDao.getArtistSuggestionsWithFrequency(query).map { it.artist }
     }
