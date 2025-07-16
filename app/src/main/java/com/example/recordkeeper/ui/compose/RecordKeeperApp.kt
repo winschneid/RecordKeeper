@@ -24,15 +24,23 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.example.recordkeeper.R
+import com.example.recordkeeper.ui.navigation.NavigationRoutes
+import com.example.recordkeeper.ui.screens.AddLiveRecordScreen
+import com.example.recordkeeper.ui.screens.AddMovieRecordScreen
+import com.example.recordkeeper.ui.screens.AddRamenRecordScreen
 import com.example.recordkeeper.ui.theme.RecordKeeperTheme
 import com.example.recordkeeper.viewmodel.RecordViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RecordKeeperApp(viewModel: RecordViewModel) {
+    val navController = rememberNavController()
     val selectedTab by viewModel.selectedTab.collectAsState()
-    var showAddDialog by remember { mutableStateOf(false) }
     
     val tabs = listOf(
         stringResource(R.string.live_tab),
@@ -51,7 +59,11 @@ fun RecordKeeperApp(viewModel: RecordViewModel) {
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
-                    showAddDialog = true
+                    when (selectedTab) {
+                        0 -> navController.navigate(NavigationRoutes.AddLiveRecord.route)
+                        1 -> navController.navigate(NavigationRoutes.AddMovieRecord.route)
+                        2 -> navController.navigate(NavigationRoutes.AddRamenRecord.route)
+                    }
                 }
             ) {
                 Icon(Icons.Default.Add, contentDescription = stringResource(R.string.add_record))
@@ -76,21 +88,51 @@ fun RecordKeeperApp(viewModel: RecordViewModel) {
             }
             
             Box(modifier = Modifier.fillMaxSize()) {
-                when (selectedTab) {
-                    0 -> LiveRecordsScreen(viewModel = viewModel)
-                    1 -> MovieRecordsScreen(viewModel = viewModel)
-                    2 -> RamenRecordsScreen(viewModel = viewModel)
-                }
+                RecordNavHost(
+                    navController = navController,
+                    viewModel = viewModel,
+                    selectedTab = selectedTab
+                )
             }
         }
     }
-    
-    if (showAddDialog) {
-        AddRecordDialog(
-            viewModel = viewModel,
-            selectedTab = selectedTab,
-            onDismiss = { showAddDialog = false }
-        )
+}
+
+@Composable
+fun RecordNavHost(
+    navController: NavHostController,
+    viewModel: RecordViewModel,
+    selectedTab: Int
+) {
+    NavHost(
+        navController = navController,
+        startDestination = "main"
+    ) {
+        composable("main") {
+            when (selectedTab) {
+                0 -> LiveRecordsScreen(viewModel = viewModel)
+                1 -> MovieRecordsScreen(viewModel = viewModel)
+                2 -> RamenRecordsScreen(viewModel = viewModel)
+            }
+        }
+        composable(NavigationRoutes.AddLiveRecord.route) {
+            AddLiveRecordScreen(
+                viewModel = viewModel,
+                onNavigateBack = { navController.popBackStack() }
+            )
+        }
+        composable(NavigationRoutes.AddMovieRecord.route) {
+            AddMovieRecordScreen(
+                viewModel = viewModel,
+                onNavigateBack = { navController.popBackStack() }
+            )
+        }
+        composable(NavigationRoutes.AddRamenRecord.route) {
+            AddRamenRecordScreen(
+                viewModel = viewModel,
+                onNavigateBack = { navController.popBackStack() }
+            )
+        }
     }
 }
 
