@@ -71,6 +71,9 @@ dependencies {
     // Accompanist
     implementation(libs.bundles.accompanist)
     
+    // Coil
+    implementation(libs.coil.compose)
+    
     // Testing
     testImplementation(libs.junit)
     androidTestImplementation(libs.bundles.testing)

@@ -170,7 +170,8 @@ private fun LiveRecordCardPreview() {
                 rating = 5,
                 memo = "最高のライブでした！"
             ),
-            onDelete = {}
+            onDelete = {},
+            viewModel = TODO("Provide ViewModel for preview")
         )
     }
 }

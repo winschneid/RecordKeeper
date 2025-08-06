@@ -15,7 +15,7 @@ import com.example.recordkeeper.data.entity.RamenRecord
 
 @Database(
     entities = [LiveRecord::class, MovieRecord::class, RamenRecord::class],
-    version = 2,
+    version = 3,
     exportSchema = false
 )
 abstract class RecordDatabase : RoomDatabase() {
@@ -37,13 +37,20 @@ abstract class RecordDatabase : RoomDatabase() {
             }
         }
 
+        private val MIGRATION_2_3 = object : Migration(2, 3) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                // imagePathカラムを追加
+                database.execSQL("ALTER TABLE ramen_records ADD COLUMN imagePath TEXT")
+            }
+        }
+
         fun getDatabase(context: Context): RecordDatabase {
             return INSTANCE ?: synchronized(this) {
                 val instance = Room.databaseBuilder(
                     context.applicationContext,
                     RecordDatabase::class.java,
                     "record_database"
-                ).addMigrations(MIGRATION_1_2).build()
+                ).addMigrations(MIGRATION_1_2, MIGRATION_2_3).build()
                 INSTANCE = instance
                 instance
             }

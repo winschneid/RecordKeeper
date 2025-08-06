@@ -29,6 +29,9 @@ navigation-compose = "2.8.4"
 # Accompanist
 accompanist = "0.36.0"
 
+# Coil
+coil = "2.7.0"
+
 # Testing
 junit = "4.13.2"
 androidx-test-ext-junit = "1.2.1"
@@ -62,6 +65,9 @@ androidx-navigation-compose = { group = "androidx.navigation", name = "navigatio
 # Accompanist
 accompanist-pager = { group = "com.google.accompanist", name = "accompanist-pager", version.ref = "accompanist" }
 accompanist-pager-indicators = { group = "com.google.accompanist", name = "accompanist-pager-indicators", version.ref = "accompanist" }
+
+# Coil
+coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
 
 # Testing
 junit = { group = "junit", name = "junit", version.ref = "junit" }

@@ -11,5 +11,6 @@ data class RamenRecord(
     val menuName: String,
     val date: String,
     val rating: Int,
-    val memo: String = ""
+    val memo: String = "",
+    val imagePath: String? = null
 )
