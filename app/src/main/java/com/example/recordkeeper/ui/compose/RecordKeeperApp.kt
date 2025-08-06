@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.recordkeeper.R
 import com.example.recordkeeper.ui.navigation.NavigationRoutes
@@ -41,6 +42,15 @@ import com.example.recordkeeper.viewmodel.RecordViewModel
 fun RecordKeeperApp(viewModel: RecordViewModel) {
     val navController = rememberNavController()
     val selectedTab by viewModel.selectedTab.collectAsState()
+    val currentBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentDestination = currentBackStackEntry?.destination?.route
+    
+    // 追加画面かどうかをチェック
+    val isOnAddScreen = currentDestination in listOf(
+        NavigationRoutes.AddLiveRecord.route,
+        NavigationRoutes.AddMovieRecord.route,
+        NavigationRoutes.AddRamenRecord.route
+    )
     
     val tabs = listOf(
         stringResource(R.string.live_tab),
@@ -81,8 +91,14 @@ fun RecordKeeperApp(viewModel: RecordViewModel) {
                 tabs.forEachIndexed { index, title ->
                     Tab(
                         selected = selectedTab == index,
-                        onClick = { viewModel.setSelectedTab(index) },
-                        text = { Text(title) }
+                        onClick = { 
+                            // 追加画面表示中はタブ移動を無効化
+                            if (!isOnAddScreen) {
+                                viewModel.setSelectedTab(index)
+                            }
+                        },
+                        text = { Text(title) },
+                        enabled = !isOnAddScreen // 追加画面表示中はタブを無効化
                     )
                 }
             }
