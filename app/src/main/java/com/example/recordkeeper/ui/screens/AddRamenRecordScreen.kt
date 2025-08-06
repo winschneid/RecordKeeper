@@ -1,6 +1,8 @@
 package com.example.recordkeeper.ui.screens
 
+import android.Manifest
 import android.net.Uri
+import android.os.Build
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
@@ -90,6 +92,24 @@ fun AddRamenRecordScreen(
     ) { success ->
         if (success && tempImageFile != null) {
             selectedImageUri = ImageUtils.getImageUri(context, tempImageFile!!)
+        }
+    }
+
+    val cameraPermissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        if (isGranted) {
+            tempImageFile = ImageUtils.createImageFile(context)
+            val imageUri = ImageUtils.getImageUri(context, tempImageFile!!)
+            cameraLauncher.launch(imageUri)
+        }
+    }
+
+    val storagePermissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        if (isGranted) {
+            galleryLauncher.launch("image/*")
         }
     }
 
@@ -242,13 +262,16 @@ fun AddRamenRecordScreen(
         ImagePickerDialog(
             onDismiss = { showImagePickerDialog = false },
             onCameraClick = {
-                tempImageFile = ImageUtils.createImageFile(context)
-                val imageUri = ImageUtils.getImageUri(context, tempImageFile!!)
-                cameraLauncher.launch(imageUri)
+                cameraPermissionLauncher.launch(Manifest.permission.CAMERA)
                 showImagePickerDialog = false
             },
             onGalleryClick = {
-                galleryLauncher.launch("image/*")
+                val permission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    Manifest.permission.READ_MEDIA_IMAGES
+                } else {
+                    Manifest.permission.READ_EXTERNAL_STORAGE
+                }
+                storagePermissionLauncher.launch(permission)
                 showImagePickerDialog = false
             }
         )
